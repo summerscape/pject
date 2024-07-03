@@ -80,4 +80,15 @@ vec = weather_data.VEC
 vvv = weather_data.VVV
 wsd = weather_data.WSD
 
-print(pty)
+
+'''
+'PTY': '강수형태',
+ 'REH': '습도',
+ 'RN1': '1시간강수량',
+ 'T1H': '기온',
+ 'UUU': '동서바람성분',
+ 'VEC': '풍향',
+ 'VVV': '남북바람성분',
+ 'WSD': '풍속'
+
+ '''
