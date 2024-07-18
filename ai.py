@@ -8,6 +8,7 @@ import torch.nn.functional as F
 
 import weatherAPI
 
+
 # 데이터 준비
 X = np.array([
     [35, 80, 0, 5], [5, 60, 5, 3], [18, 50, 0, 2], [25, 90, 1, 8], [15, 40, 0, 1],
@@ -110,6 +111,7 @@ print(f'하의 Accuracy: {lower_accuracy * 100:.2f}%')
 print(f'신발 Accuracy: {shoes_accuracy * 100:.2f}%')
 
 
+
 '''
  'PTY': '강수형태',
  'REH': '습도',
@@ -121,6 +123,8 @@ print(f'신발 Accuracy: {shoes_accuracy * 100:.2f}%')
  'WSD': '풍속'
 
  '''
+
+
 
 
 
@@ -154,18 +158,19 @@ shoes_styles = {
     '워커': '스포티', '부츠': '클래식', '스니커즈': '스포티', '플랫슈즈': '캐주얼', '힐': '클래식'
 }
 
-
-
-# 예측 결과 출력
+# 추천 결과를 딕셔너리로 출력
+recommendations = {}
 styles = ['캐주얼', '클래식', '스포티']
 
-print("추천 스타일")
 for style in styles:
     upper_item = next(item for item in upper_prediction if upper_styles[upper_labels[item]] == style)
     lower_item = next(item for item in lower_prediction if lower_styles[lower_labels[item]] == style)
     shoes_item = next(item for item in shoes_prediction if shoes_styles[shoes_labels[item]] == style)
 
-    print(f"\n스타일: {style}")
-    print(f"상의 추천: {upper_labels[upper_item]} ({upper_styles[upper_labels[upper_item]]})")
-    print(f"하의 추천: {lower_labels[lower_item]} ({lower_styles[lower_labels[lower_item]]})")
-    print(f"신발 추천: {shoes_labels[shoes_item]} ({shoes_styles[shoes_labels[shoes_item]]})")
+    recommendations[style] = {
+        '상의': upper_labels[upper_item],
+        '하의': lower_labels[lower_item],
+        '신발': shoes_labels[shoes_item]
+    }
+
+# print(recommendations)
