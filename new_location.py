@@ -1,16 +1,10 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
-google_maps_api_key = os.environ.get('google_maps_api_key')
-
-
 import requests
-import os
-from dotenv import load_dotenv
 import json
 
-
+# 현재 접속 위치 위도, 경도 값 가져오기
 load_dotenv()
 google_maps_api_key = os.environ.get('google_maps_api_key')
 url = f'https://www.googleapis.com/geolocation/v1/geolocate?key={google_maps_api_key}'
@@ -20,15 +14,14 @@ response = json.loads(requests.post(url).text)
 location = response['location']
 lat = round(location['lat'], 10)
 lng = round(location['lng'], 10)
-lat_lng = [lat, lng]
+# lat_lng = [lat, lng]
 # print(lat_lng)
     
 nx_lat = lat
 ny_lng = lng
 
 
-
-# 위도, 경도 값 변환 
+# 위도, 경도 값 지역 코드로 변환
 import math
 NX = 149            ## X축 격자점 수
 NY = 253            ## Y축 격자점 수
@@ -48,7 +41,6 @@ if first == 0 :
     DEGRAD = PI/ 180.0
     RADDEG = 180.0 / PI
 
-
     re = Re / grid
     slat1 = slat1 * DEGRAD
     slat2 = slat2 * DEGRAD
@@ -62,7 +54,8 @@ if first == 0 :
     ro = math.tan(PI * 0.25 + olat * 0.5)
     ro = re * sf / math.pow(ro, sn)
     first = 1
-
+    
+#위도, 경도 -> 지역코드로 변환
 def mapToGrid(lat, lon, code = 0 ):
     ra = math.tan(PI * 0.25 + lat * DEGRAD * 0.5)
     ra = re * sf / pow(ra, sn)
@@ -78,6 +71,7 @@ def mapToGrid(lat, lon, code = 0 ):
     y = int(y + 1.5)
     return x, y
 
+# 지역코드 -> 위도, 경도 변환
 def gridToMap(x, y, code = 1):
     x = x - 1
     y = y - 1
@@ -104,12 +98,6 @@ def gridToMap(x, y, code = 1):
     return lat, lon
 
 
-# print(mapToGrid(35.8759, 128.6075))
-
-# print(gridToMap(60, 127))
-
-# print(mapToGrid(nx, ny))
 
 n_nx, n_ny = mapToGrid(nx_lat, ny_lng)  # 위도 경도 값(float) 지역코드로 변환 (x,y 좌표)
 
-# print(nx, ny)

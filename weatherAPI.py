@@ -4,8 +4,7 @@ import requests
 import xmltodict
 import json
 
-
-import location, new_location
+import new_location
 
 
 # 인코딩된 URL 부분
@@ -17,7 +16,6 @@ decoded_url = urllib.parse.unquote(encoded_url)
 today =datetime.today().strftime("%Y%m%d") # 시스템상 오늘 날짜
 time =datetime.today().strftime("%H") + "00"  # 시스템상 현재 시간(분은 제외함)
 
-
 url = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst'
 params ={'serviceKey' : decoded_url, # 서비스키
          'pageNo' : '10',             # 페이지번호
@@ -25,10 +23,8 @@ params ={'serviceKey' : decoded_url, # 서비스키
          'dataType' : 'XML',         # 응답자료형식
          'base_date' : {today},      #발표일자 #현재날짜 출력
          'base_time' : {time},       #발표시각 #현재 시각 출력 시간단위 1400 형태
-         'nx' : {new_location.n_nx},                # 예보지점 X좌표 #x좌표값
+         'nx' : {new_location.n_nx},                # 예보지점 X좌표 # x좌표값
          'ny' : {new_location.n_ny} }              # 예보지점 Y좌표 # y좌표값
-
-
 
 
 response = requests.get(url, params=params)
@@ -36,46 +32,26 @@ xmlData = response.text  # xml데이터
 jsonStr = json.dumps(xmltodict.parse(xmlData), indent=4) # xml to json
 dict = json.loads(jsonStr)
 
-
-# 정각에 서버에서 날씨정보 업데이틀함 1~5분정도 딜레이 생기므로 예외처리함
-# 요청이 성공했는지 확인
-if response.status_code == 200:
-    xmlData = response.text  # XML 데이터 가져오기
-    dict_data = xmltodict.parse(xmlData)  # XML을 딕셔너리로 파싱
-
-    # 딕셔너리를 JSON 문자열로 변환하여 가독성 높이기
-    jsonStr = json.dumps(dict_data, indent=4)
-    data = json.loads(jsonStr)
-
-    # 결과 메시지가 정상 서비스인지 확인
-    resultMsg = data['response']['header']['resultMsg']
-    if resultMsg == 'NORMAL_SERVICE':
-        # 데이터를 처리
-        items = data['response']['body']['items']
-        if items:  # items가 비어있지 않은지 확인
-            print(items)
-        else:
-            print("지정된 파라미터에 대한 데이터가 없습니다.")
-    elif resultMsg == 'NO_DATA':
-        print("데이터가 없습니다.")
-    else:
-        print(f"오류: {resultMsg}")
-else:
-    print(f"데이터를 가져오지 못했습니다. HTTP 상태 코드: {response.status_code}")
-
-
-
-
-
-
-
 print(response)
 
 # print(dict)
 data = dict
 
 # 불러온 데이터가  None 일 경우 오류남 예외처리 해야됨 
-# 아마 api  갱신되는 시점에서 딜레이가 있는 듯
+# 아마 api  갱신되는 시점에서 딜레이가 있는 듯 
+
+# dict['response']['header']['resultMsg'] == 'NORMAL_SERVICE'  # true
+# dict['response']['header']['resultMsg'] == 'NO_DATA'  # false
+
+
+
+
+
+
+
+
+
+
 
 
 class WeatherData:
@@ -90,18 +66,6 @@ for item in data['response']['body']['items']['item']:
     value = item['obsrValue']
     setattr(weather_data, category, value)
 
-# 결과 확인
-# print(f"PTY = {weather_data.PTY}")
-# print(f"REH = {weather_data.REH}")
-# print(f"RN1 = {weather_data.RN1}")
-# print(f"T1H = {weather_data.T1H}")
-# print(f"UUU = {weather_data.UUU}")
-# print(f"VEC = {weather_data.VEC}")
-# print(f"VVV = {weather_data.VVV}")
-# print(f"WSD = {weather_data.WSD}")
-
-
-# pty = weather_data.PTY
 
 pty = weather_data.PTY
 reh = weather_data.REH
@@ -114,6 +78,9 @@ uuu = weather_data.UUU
 
 
 
+
+
+
 # 강수형태 PTY 없음0, 비1, 비/눈2, 눈3, 밧방울5, 빗방울눈날림6, 눈날림7 
 
 # 강수량 RN1
@@ -122,8 +89,6 @@ uuu = weather_data.UUU
 # 1.0mm 이상 30.0mm미만 실수값 +mm(1.0mm ~ 29.9mm)
 # 30.0mm 이상 50.0mm미만 30.0 ~ 50.0mm
 # 50.0mm 이상 50.0mm이상
-
-
 
 
 # '''
