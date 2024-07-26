@@ -52,7 +52,7 @@ def get_outfit_recommendation(temperature, humidity, precipitation, precipitatio
         "악세사리: 우비, 우산, 장갑, 목도리"
         "Sporty:"
         "상의: 패딩, 바람막이, 야구잠바, 후드티, 맨투맨, 반팔티셔츠"
-        "하의: 트레이닝 긴바지, 트레이닝 반바지"
+        "하의: 트레이닝긴바지, 트레이닝반바지"
         "신발: 스포츠샌들, 운동화"
         "악세사리: 선글라스, 우비, 우산, 캡모자"
         
@@ -138,6 +138,8 @@ for user_query in user_queries:
     humidity = REH
     precipitation = RN1
     precipitation_type = weather_description(PTY)
+ 
+    
     
     response_text = get_outfit_recommendation(temperature, humidity, precipitation, precipitation_type)
     
@@ -169,5 +171,12 @@ data_dict = json.loads(json_string)
 print(data_dict)
 
 
+# def job():
+    
+#     print("매 시각 30분 마다 작동 시킬 것")
 
+# schedule.every(30).minutes.do(job)
 
+# while True :
+#     schedule.run_pending()
+#     time.sleep(1)

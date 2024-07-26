@@ -33,7 +33,7 @@ async def root():
     return {
             '강수형태' : weatherAPI.pty, 
             '습도' : weatherAPI.reh, 
-            '1시간 강수량' : weatherAPI.rn1, 
+            '강수량' : weatherAPI.rn1, 
             '기온': weatherAPI.t1h,
             '동서바람성분' : weatherAPI.uuu,
             '풍향' : weatherAPI.vec,
